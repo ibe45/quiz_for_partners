@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Between us: a questionnaire for two</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F4F9;--card:#fff;--ink:#1F2340;--mute:#625F78;--line:#DAD6E4;--a:#3B4BC2;--b:#C2456B;--ok:#1F7A6A;--warn:#A85A0C;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#14162A;--card:#1D2040;--ink:#EDEBF7;--mute:#A9A8C4;--line:#343862;--a:#8B98FF;--b:#FF8DAE;--ok:#5CD1B8;--warn:#F2A65A;color-scheme:dark}}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.15;margin:0}
+h1{font-size:clamp(2.2rem,7vw,3.6rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:1.5rem;margin:2.5rem 0 .25rem}
+main{max-width:720px;margin:0 auto;padding:2rem 1.1rem 5rem}
+.lede{color:var(--mute);max-width:56ch;margin:.8rem 0 0}
+nav{display:flex;gap:.4rem;margin:1.6rem 0 0;border-bottom:1px solid var(--line)}
+nav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font:inherit;font-weight:600;padding:.6rem .9rem;cursor:pointer;margin-bottom:-1px}
+nav button[aria-selected=true]{color:var(--ink);border-color:var(--a)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,label:focus-within{outline:3px solid var(--a);outline-offset:2px}
+.sub{color:var(--mute);margin:0 0 1rem;font-size:.95rem}
+fieldset{border:0;margin:0;padding:1.1rem 0;border-top:1px solid var(--line)}
+legend{padding:0;font-weight:600;margin-bottom:.7rem}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem}
+.scale label{position:relative;text-align:center;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:.55rem 0;cursor:pointer;font-weight:600;transition:background .15s,border-color .15s}
+.scale input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.scale label:has(input:checked){background:var(--a);border-color:var(--a);color:var(--bg)}
+.ends{display:flex;justify-content:space-between;color:var(--mute);font-size:.82rem;margin-top:.35rem}
+textarea,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:.7rem .8rem}
+textarea{min-height:5.5rem;resize:vertical}
+.name{margin:1.8rem 0 0}.name label{font-weight:600;display:block;margin-bottom:.4rem}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:.6rem 0;margin-top:.5rem}
+.bar div{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--a);transition:width .25s}
+.bar span{font-size:.82rem;color:var(--mute)}
+.btn{background:var(--a);color:var(--bg);border:0;border-radius:10px;font:inherit;font-weight:700;padding:.8rem 1.3rem;cursor:pointer}
+.btn.alt{background:none;color:var(--ink);border:1.5px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.2rem}
+.done{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:1.3rem;margin-top:2rem}
+.done h2{margin-top:0}
+.err{color:var(--warn);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th,td{text-align:left;padding:.6rem .4rem;border-top:1px solid var(--line);vertical-align:top}
+th{font-size:.85rem;color:var(--mute);font-weight:600}
+td.n{text-align:center;font-weight:700;width:3.2rem}
+.pa{color:var(--a)}.pb{color:var(--b)}
+.tag{font-size:.8rem;font-weight:700;white-space:nowrap}
+.talk{color:var(--warn)}.same{color:var(--ok)}
+.wrap{overflow-x:auto}
+.note{border-left:4px solid var(--a);padding:.2rem 0 .2rem .9rem;margin:.5rem 0}.note.b{border-color:var(--b)}
+.sum{display:flex;gap:1.6rem;flex-wrap:wrap;margin:1rem 0}
+.sum b{font:700 2rem "Bricolage Grotesque",system-ui,sans-serif;display:block;line-height:1}
+.hide{display:none}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<h1>Between us</h1>
+<p class="lede">A short questionnaire for two people in a relationship. Each of you answers on your own, then you compare answers side by side and talk about where you differ.</p>
+<nav role="tablist">
+  <button role="tab" id="t1" aria-selected="true">Answer</button>
+  <button role="tab" id="t2" aria-selected="false">Compare</button>
+</nav>
+
+<section id="fill">
+  <div class="name"><label for="who">Your name</label><input type="text" id="who" autocomplete="given-name" placeholder="e.g. Sam"></div>
+  <div class="name hide" id="codebox"><label for="code">Couple code</label><p class="sub" style="margin:0 0 .4rem">Pick any word with your partner and both type it here, so your answers are grouped together.</p><input type="text" id="code" autocomplete="off" placeholder="e.g. blue-heron"></div>
+  <div class="bar"><div><i id="pg"></i></div><span id="pt">0 of 0 answered</span></div>
+  <form id="qs" onsubmit="return false"></form>
+  <div class="row"><button class="btn" id="fin">Finish and save my answers</button></div>
+  <p class="err" id="msg" role="alert"></p>
+  <div class="done hide" id="done">
+    <h2>Your answers are ready</h2>
+    <p class="sub" id="sent" role="status"></p>
+    <p>Download your file and send it to your partner, and ask for theirs. Then open the Compare tab and add both files. Nothing is sent anywhere: your answers stay on this device until you share the file.</p>
+    <div class="row"><button class="btn" id="dl">Download my answers</button><button class="btn alt" id="cp">Copy as text</button></div>
+  </div>
+</section>
+
+<section id="cmp" class="hide">
+  <h2 style="margin-top:2rem">Compare two answer files</h2>
+  <p class="sub">Choose both files at once (hold Ctrl or Cmd to select two).</p>
+  <input type="file" id="files" accept=".json,application/json" multiple>
+  <p class="err" id="cmsg" role="alert"></p>
+  <div id="out"></div>
+</section>
+</main>
+
+<script>
+const SCALE=["Strongly disagree","Disagree","Unsure","Agree","Strongly agree"];
+const S=[
+{t:"Talking and listening",q:[
+"I can tell my partner what is on my mind without worrying about how they will react.",
+"My partner listens to me without interrupting or getting defensive.",
+"We talk about small things from our day, not only practical matters.",
+"When something bothers me, I bring it up instead of holding it in."]},
+{t:"Trust and support",q:[
+"I feel safe being fully myself with my partner.",
+"I trust my partner to keep their promises.",
+"My partner supports my goals, even when they cost us something.",
+"I turn to my partner first when I have bad news."]},
+{t:"Time and affection",q:[
+"We spend enough quality time together.",
+"I feel appreciated for what I do for us.",
+"We show affection in ways that both of us enjoy.",
+"I am happy with how much time we each get on our own."]},
+{t:"Money, home and the future",q:[
+"We talk openly about money and make big spending decisions together.",
+"The household work feels fairly shared.",
+"We want the same things for the next five years.",
+"I feel excited about what is ahead for us."]},
+{t:"Disagreements",q:[
+"When we argue, we stay respectful.",
+"We can calm down and come back to a hard conversation.",
+"After a fight, we repair things instead of leaving them unresolved.",
+"I believe we can work through the tough moments in our relationship."]}
+];
+const O=[
+"What is one thing your partner does that makes you feel loved?",
+"What is one thing you wish you could change or have more of in your relationship?",
+"What is something you would like us to try together this year?"];
+
+const $=id=>document.getElementById(id);
+const KEY="between-us-v1";
+// Paste your Google Apps Script web app URL between the quotes. Leave empty to turn off sending.
+const SHEET_URL="https://script.google.com/macros/s/AKfycbwKiTYXN12d0iaIg7IwxA3EityG1eQ9etHsRqXTGE4dp6w67Qzp6peR9wWzdwaj_lCKvQ/exec";
+let st={name:"",code:"",r:{},o:{}};
+try{st=Object.assign(st,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const total=S.reduce((n,s)=>n+s.q.length,0);
+
+function build(){
+  let h="";
+  S.forEach((s,i)=>{
+    h+=`<h2>${s.t}</h2><p class="sub">Rate how much you agree.</p>`;
+    s.q.forEach((q,j)=>{
+      const id=i+"."+j;
+      h+=`<fieldset><legend>${q}</legend><div class="scale">`+
+        SCALE.map((l,k)=>`<label title="${l}"><input type="radio" name="r${id}" value="${k+1}" aria-label="${l}"${st.r[id]==k+1?" checked":""}>${k+1}</label>`).join("")+
+        `</div><div class="ends"><span>Strongly disagree</span><span>Strongly agree</span></div></fieldset>`;
+    });
+  });
+  h+=`<h2>In your own words</h2><p class="sub">Optional, but these often start the best conversations.</p>`;
+  O.forEach((q,i)=>{h+=`<fieldset><legend><label for="o${i}">${q}</label></legend><textarea id="o${i}">${(st.o[i]||"").replace(/</g,"&lt;")}</textarea></fieldset>`});
+  $("qs").innerHTML=h;
+  $("who").value=st.name||"";$("code").value=st.code||"";$("codebox").classList.toggle("hide",!SHEET_URL);
+  prog();
+}
+function prog(){
+  const n=Object.keys(st.r).length;
+  $("pg").style.width=(n/total*100)+"%";
+  $("pt").textContent=n+" of "+total+" answered";
+}
+$("qs").addEventListener("change",e=>{
+  if(e.target.type==="radio"){st.r[e.target.name.slice(1)]=+e.target.value;prog();save()}
+});
+$("qs").addEventListener("input",e=>{
+  if(e.target.id&&e.target.id[0]==="o"){st.o[e.target.id.slice(1)]=e.target.value;save()}
+});
+$("who").addEventListener("input",e=>{st.name=e.target.value;save()});
+$("code").addEventListener("input",e=>{st.code=e.target.value;save()});
+
+function payload(){
+  return{app:"between-us",version:1,code:(st.code||"").trim(),name:st.name.trim(),date:new Date().toISOString().slice(0,10),ratings:st.r,notes:st.o};
+}
+$("fin").onclick=async()=>{
+  const n=Object.keys(st.r).length;
+  if(!st.name.trim()){$("msg").textContent="Add your name at the top so your partner knows whose answers these are.";$("who").focus();return}
+  if(SHEET_URL&&!(st.code||"").trim()){$("msg").textContent="Add the couple code you and your partner agreed on.";$("code").focus();return}
+  if(n<total){$("msg").textContent="You have "+(total-n)+" statements left to rate.";return}
+  $("msg").textContent="";$("done").classList.remove("hide");
+  if(SHEET_URL){
+    $("sent").textContent="Sending your answers…";
+    try{
+      await fetch(SHEET_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload())});
+      $("sent").textContent="Your answers were sent. You can also download a copy below.";
+    }catch(e){$("sent").textContent="Your answers could not be sent. Download your file below and share it instead."}
+  }
+  $("done").scrollIntoView({behavior:"smooth"});
+};
+$("dl").onclick=()=>{
+  const b=new Blob([JSON.stringify(payload(),null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(b);
+  a.download="between-us-"+(st.name.trim().toLowerCase().replace(/\W+/g,"-")||"me")+".json";
+  a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+$("cp").onclick=async()=>{
+  try{await navigator.clipboard.writeText(JSON.stringify(payload()));$("cp").textContent="Copied"}
+  catch(e){$("cp").textContent="Copy failed: use Download"}
+};
+
+function tab(n){
+  $("fill").classList.toggle("hide",n!==1);$("cmp").classList.toggle("hide",n!==2);
+  $("t1").setAttribute("aria-selected",n===1);$("t2").setAttribute("aria-selected",n===2);
+}
+$("t1").onclick=()=>tab(1);$("t2").onclick=()=>tab(2);
+
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+$("files").addEventListener("change",async e=>{
+  const fs=[...e.target.files];$("out").innerHTML="";$("cmsg").textContent="";
+  if(fs.length!==2){$("cmsg").textContent="Choose exactly two files, one from each of you.";return}
+  try{
+    const d=await Promise.all(fs.map(f=>f.text().then(JSON.parse)));
+    if(d.some(x=>x.app!=="between-us"||!x.ratings))throw 0;
+    compare(d[0],d[1]);
+  }catch(err){$("cmsg").textContent="One of the files is not a Between us answer file. Download it again from the Answer tab."}
+});
+function compare(a,b){
+  const A=esc(a.name||"Partner 1"),B=esc(b.name||"Partner 2");
+  let rows="",same=0,talk=0,gap=0;
+  S.forEach((s,i)=>{
+    rows+=`<tr><th colspan="4">${s.t}</th></tr>`;
+    s.q.forEach((q,j)=>{
+      const id=i+"."+j,x=a.ratings[id],y=b.ratings[id];
+      if(!x||!y)return;
+      const d=Math.abs(x-y);gap+=d;
+      let tag="";
+      if(d<=1){same++;tag=`<span class="tag same">Aligned</span>`}
+      else if(d>=2){talk++;tag=`<span class="tag talk">Worth a talk</span>`}
+      rows+=`<tr><td>${q}</td><td class="n pa">${x}</td><td class="n pb">${y}</td><td>${tag}</td></tr>`;
+    });
+  });
+  let notes="";
+  O.forEach((q,i)=>{
+    const x=(a.notes||{})[i],y=(b.notes||{})[i];
+    if(!x&&!y)return;
+    notes+=`<h3>${q}</h3>`+(x?`<div class="note"><b class="pa">${A}</b><br>${esc(x)}</div>`:"")+(y?`<div class="note b"><b class="pb">${B}</b><br>${esc(y)}</div>`:"");
+  });
+  $("out").innerHTML=`
+  <div class="sum"><div><b>${same}</b>statements you see the same way</div><div><b>${talk}</b>to talk through</div></div>
+  <p class="sub">Scores run from 1 (strongly disagree) to 5 (strongly agree). Statements are marked “Worth a talk” when your answers differ by two points or more. A difference is a prompt for a conversation, not a verdict.</p>
+  <div class="wrap"><table><thead><tr><th>Statement</th><th class="n pa">${A}</th><th class="n pb">${B}</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+  ${notes?`<h2>In your own words</h2>${notes}`:""}`;
+}
+build();
+</script>
+</body>
+</html>
